@@ -3,7 +3,7 @@
 // For the purposes of this demo, we'll create a client-side mock API
 
 export async function handleChatRequest(message: string) {
-  // This simulates a call to the HuggingFace API with the provided script
+  // This sends the user's message to the Qwen3-235B-A22B model via HuggingFace
   
   try {
     const response = await fetch("https://router.huggingface.co/nscale/v1/chat/completions", {
@@ -16,7 +16,7 @@ export async function handleChatRequest(message: string) {
         messages: [
           {
             role: "user",
-            content: message,
+            content: message, // User's message is sent here
           }
         ],
         model: "Qwen/Qwen3-235B-A22B"

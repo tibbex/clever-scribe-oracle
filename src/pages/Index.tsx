@@ -3,6 +3,7 @@ import { useState } from "react";
 import ChatInterface from "../components/ChatInterface";
 import Header from "../components/Header";
 import { Message } from "../types/chat";
+import { handleChatRequest } from "../api/chat";
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,27 +25,13 @@ const Index = () => {
     setError(null);
     
     try {
-      // Call API
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: content,
-        }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to get response from AI");
-      }
+      // Call our API directly with the user's message
+      const response = await handleChatRequest(content);
       
       // Add AI response to chat
       const aiMessage: Message = {
         role: "assistant",
-        content: data.content,
+        content: response.content,
         timestamp: new Date().toISOString(),
       };
       
