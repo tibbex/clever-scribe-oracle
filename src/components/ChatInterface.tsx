@@ -5,6 +5,8 @@ import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/AuthContext";
+import AuraLogo from "./AuraLogo";
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -20,6 +22,7 @@ const ChatInterface = ({
   onSendMessage,
 }: ChatInterfaceProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,12 +32,34 @@ const ChatInterface = ({
     <div className="flex flex-col h-full max-w-4xl mx-auto">
       <div className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
-            <MessageSquareIcon className="h-12 w-12 mb-3 text-gray-300" />
-            <h2 className="text-xl font-medium mb-1">Welcome to AI Chat</h2>
-            <p className="max-w-md">
-              Ask a question to start a conversation with the Qwen3-235B-A22B model.
-            </p>
+          <div className="flex flex-col items-center justify-center h-full text-center">
+            <AuraLogo className="w-28 h-28 mb-6" />
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-transparent bg-clip-text">
+              Hello, {user?.name || "there"}!
+            </h2>
+            <div className="max-w-md space-y-4 text-gray-600">
+              <p>
+                I'm Aura, your AI assistant. How can I help you today?
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
+                <SuggestionButton 
+                  onClick={() => onSendMessage("Tell me a fun fact about space")}
+                  text="Tell me a fun fact about space"
+                />
+                <SuggestionButton 
+                  onClick={() => onSendMessage("What can you do?")}
+                  text="What can you do?"
+                />
+                <SuggestionButton 
+                  onClick={() => onSendMessage("Write a short poem about nature")}
+                  text="Write a short poem about nature"
+                />
+                <SuggestionButton 
+                  onClick={() => onSendMessage("How do I stay productive?")}
+                  text="How do I stay productive?"
+                />
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -44,7 +69,7 @@ const ChatInterface = ({
             {isLoading && (
               <div className="flex items-center space-x-2 text-gray-500 px-4 py-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>AI is thinking...</span>
+                <span>Aura is thinking...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -65,20 +90,14 @@ const ChatInterface = ({
   );
 };
 
-export default ChatInterface;
-
-// Locally defined icon for empty state
-const MessageSquareIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
+// Suggestion button for the empty state
+const SuggestionButton = ({ onClick, text }: { onClick: () => void, text: string }) => (
+  <button
+    onClick={onClick}
+    className="p-3 border border-gray-200 rounded-lg text-sm text-left hover:bg-gray-50 transition-colors"
   >
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-  </svg>
+    {text}
+  </button>
 );
+
+export default ChatInterface;

@@ -1,16 +1,43 @@
 
-import { MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut } from "lucide-react";
+import AuraLogo from "./AuraLogo";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    logout();
+    navigate("/signin");
+  };
+
   return (
-    <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center">
+    <header className="bg-white border-b border-gray-200 py-3 px-6 flex items-center">
       <div className="flex items-center gap-2">
-        <MessageSquare className="h-6 w-6 text-blue-600" />
-        <h1 className="text-xl font-semibold text-gray-800">AI Chat Assistant</h1>
+        <AuraLogo className="h-8" />
+        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-transparent bg-clip-text">
+          Aura AI
+        </h1>
       </div>
-      <div className="ml-auto text-sm text-gray-500">
-        Powered by Qwen3-235B-A22B
-      </div>
+      {user && (
+        <div className="ml-auto flex items-center gap-4">
+          <span className="text-sm text-gray-600">
+            {user.name}
+          </span>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleLogout}
+            className="gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </Button>
+        </div>
+      )}
     </header>
   );
 };

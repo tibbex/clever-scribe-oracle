@@ -25,11 +25,15 @@ const MessageInput = ({ onSendMessage, isLoading }: MessageInputProps) => {
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
+        placeholder="Message Aura AI..."
         className="flex-1"
         disabled={isLoading}
       />
-      <Button type="submit" disabled={!message.trim() || isLoading}>
+      <Button 
+        type="submit" 
+        disabled={!message.trim() || isLoading}
+        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90"
+      >
         <Send className="h-4 w-4" />
         <span className="sr-only">Send message</span>
       </Button>
